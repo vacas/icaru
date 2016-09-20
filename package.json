@@ -4,7 +4,7 @@
   "description": "A desktop app for side-scroller game",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "mocha"
   },
   "github": "https://github.com/mfjv88/js-final-project",
