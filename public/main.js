@@ -5,14 +5,22 @@ var mainState = {
         game.load.image('columnBroken', 'assets/col-broken.png');
         game.load.image('columnUp', 'assets/col-full-upside.png');
         game.load.image('columnBrokenUp', 'assets/col-broken-upside.png');
-        game.load.image('clouds', 'assets/cloud_final.gif');
+        game.load.image('background', 'assets/cloud_final_noclouds.png');
+        game.load.image('clouds', 'assets/clouds-alone.gif');
         game.load.audio('jump', 'assets/jump.wav');
     },
 
     create: function() {
         // game.stage.image(800, 600, 'clouds');
 
-        game.add.image(0, 0, 'clouds');
+        game.add.image(0, 0, 'background');
+
+        this.clouds = this.game.add.tileSprite(0,
+          this.game.height - 550,
+          this.game.width,
+          this.game.cache.getImage('clouds').height,
+          'clouds'
+        );
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -31,9 +39,13 @@ var mainState = {
 
         this.columnsUp = game.add.group();
 
-        this.allColumns = [this.columns, this.columnsUp];
+        this.columnsBroken = game.add.group();
 
-        this.timer = game.time.events.loop(1500, this.addRowOfCol, this);
+        this.columnsBrokenUp = game.add.group();
+
+        this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
+
+        this.timer = game.time.events.loop(2250, this.addRowOfCol, this);
 
         this.score = 0;
 
@@ -48,6 +60,8 @@ var mainState = {
     },
 
     update: function() {
+        this.clouds.tilePosition.x -= 0.50;
+
         if (this.hero.y < 0 || this.hero.y > 600) {
             this.restartGame();
         }
@@ -85,6 +99,13 @@ var mainState = {
 
         column.checkWorldBounds = true;
         column.outOfBoundsKill = true;
+
+        // game.debug.text('column x: ' + this.columns.x);
+
+        // if (this.columns.x < this.hero.x){
+          this.score += 1;
+          this.labelScore.text = this.score;
+        // }
     },
 
     addOneColUpside: function(x, y) {
@@ -100,6 +121,35 @@ var mainState = {
         columnUp.outOfBoundsKill = true;
     },
 
+    addOneColBroken: function(x, y) {
+        var columnBroken = game.add.sprite(x, y, 'columnBroken');
+
+        this.columnsBroken.add(columnBroken);
+
+        game.physics.arcade.enable(columnBroken);
+
+        columnBroken.body.velocity.x = -400;
+
+        columnBroken.checkWorldBounds = true;
+        columnBroken.outOfBoundsKill = true;
+
+        this.score += 1;
+        this.labelScore.text = this.score;
+    },
+
+    addOneColBrokenUpside: function(x, y) {
+        var columnBrokenUp = game.add.sprite(x, y, 'columnBrokenUp');
+
+        this.columnsBrokenUp.add(columnBrokenUp);
+
+        game.physics.arcade.enable(columnBrokenUp);
+
+        columnBrokenUp.body.velocity.x = -400;
+
+        columnBrokenUp.checkWorldBounds = true;
+        columnBrokenUp.outOfBoundsKill = true;
+    },
+
     //need to check this block
     addRowOfCol: function() {
         var hole = Math.floor(Math.random() * 300) + 1;
@@ -110,20 +160,16 @@ var mainState = {
         for (var i = 1; i < 2; i++) {
             if (i != hole && i != hole + 300) {
                 var otherside = realHole * -350;
-                this.addOneCol(400, i * (otherside + 650));
-                this.addOneColUpside(400, i * (otherside));
+                var othersideBroken = realHole * -500;
+                if (Math.ceil(Math.random() * 3) == 3) {
+                this.addOneColBroken(800, i * (othersideBroken + 650));
+                this.addOneColBrokenUpside(800, i * (othersideBroken));
+              } else {
+                this.addOneCol(600, i * (otherside + 650));
+                this.addOneColUpside(600, i * (otherside));
+              }
             }
         }
-
-        // Upside down columns
-        // for (var n = -7; i < -5; i++) {
-        //     if (n != hole && n != hole + 1) {
-        //         this.addOneColUpside(400, n * 60 + 10);
-        //     }
-        // }
-
-        this.score += 1;
-        this.labelScore.text = this.score;
     },
 
     hitCol: function() {
@@ -140,6 +186,14 @@ var mainState = {
       }, this);
 
       this.columnsUp.forEach(function(col){
+        col.body.velocity.x = 0;
+      }, this);
+
+      this.columnsBroken.forEach(function(col){
+        col.body.velocity.x = 0;
+      }, this);
+
+      this.columnsBrokenUp.forEach(function(col){
         col.body.velocity.x = 0;
       }, this);
     },
