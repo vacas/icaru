@@ -8,6 +8,8 @@ var mainState = {
         game.load.image('background', 'assets/cloud_final_noclouds.png');
         game.load.image('clouds', 'assets/clouds-alone.gif');
         game.load.audio('jump', 'assets/jump.wav');
+        game.load.audio('point', 'assets/point.wav');
+        game.load.audio('gameover', 'assets/gameover.wav');
     },
 
     create: function() {
@@ -29,6 +31,10 @@ var mainState = {
         game.physics.arcade.enable(this.hero);
 
         this.hero.body.gravity.y = 1000;
+
+        this.gestures = new Gesture(this.game);
+
+        this.gestures.onTap.add(this.jump, this);
 
         var spaceKey = game.input.keyboard.addKey(
             Phaser.Keyboard.SPACEBAR
@@ -57,6 +63,10 @@ var mainState = {
         this.hero.anchor.setTo(-0.2, 0.5);
 
         this.jumpSound = game.add.audio('jump');
+
+        this.pointSound = game.add.audio('point');
+
+        this.gameoverSound = game.add.audio('gameover');
     },
 
     update: function() {
@@ -64,6 +74,7 @@ var mainState = {
 
         if (this.hero.y < 0 || this.hero.y > 600) {
             this.restartGame();
+            // this.gameoverSound.play();
         }
         game.physics.arcade.overlap(
             this.hero, this.allColumns, this.hitCol, null, this
@@ -71,6 +82,16 @@ var mainState = {
 
         if (this.hero.angle < 20){
           this.hero.angle += 1;
+        }
+
+        if (this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50){
+          this.score += 1;
+          this.labelScore.text = this.score;
+          this.pointSound.play();
+        } else if (this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
+          this.score += 1;
+          this.labelScore.text = this.score;
+          this.pointSound.play();
         }
     },
 
@@ -99,13 +120,6 @@ var mainState = {
 
         column.checkWorldBounds = true;
         column.outOfBoundsKill = true;
-
-        // game.debug.text('column x: ' + this.columns.x);
-
-        // if (this.columns.x < this.hero.x){
-          this.score += 1;
-          this.labelScore.text = this.score;
-        // }
     },
 
     addOneColUpside: function(x, y) {
@@ -119,6 +133,8 @@ var mainState = {
 
         columnUp.checkWorldBounds = true;
         columnUp.outOfBoundsKill = true;
+
+
     },
 
     addOneColBroken: function(x, y) {
@@ -132,9 +148,9 @@ var mainState = {
 
         columnBroken.checkWorldBounds = true;
         columnBroken.outOfBoundsKill = true;
-
-        this.score += 1;
-        this.labelScore.text = this.score;
+        //
+        // this.score += 1;
+        // this.labelScore.text = this.score;
     },
 
     addOneColBrokenUpside: function(x, y) {
@@ -179,6 +195,8 @@ var mainState = {
 
       this.hero.alive = false;
 
+      this.gameoverSound.play();
+
       game.time.events.remove(this.timer);
 
       this.columns.forEach(function(col){
@@ -205,4 +223,20 @@ var game = new Phaser.Game(800, 600);
 
 game.state.add('main', mainState);
 
+// game.state.add('menu', Menu);
+//
 game.state.start('main');
+//
+// var Menu = {
+//   preload: function() {
+//
+//   },
+//
+//   create: function() {
+//
+//   },
+//
+//   update: function() {
+//
+//   }
+// };
