@@ -32,9 +32,9 @@ var mainState = {
 
         this.hero.body.gravity.y = 1000;
 
-        this.gestures = new Gesture(this.game);
-
-        this.gestures.onTap.add(this.jump, this);
+        // this.gestures = new Gesture(this.game);
+        //
+        // this.gestures.onTap.add(this.jump, this);
 
         var spaceKey = game.input.keyboard.addKey(
             Phaser.Keyboard.SPACEBAR
