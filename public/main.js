@@ -90,11 +90,11 @@ var mainState = {
           this.hero.angle += 1;
         }
 
-        if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50){
+        if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50 || this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50){
           this.score += 1;
           this.labelScore.text = this.score;
           this.pointSound.play();
-        } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99) {
+        } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99 || this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
           this.score += 1;
           this.labelScore.text = this.score;
           this.pointSound.play();
