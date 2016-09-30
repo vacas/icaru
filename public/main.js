@@ -1,3 +1,6 @@
+var spaceKey;
+var tap;
+
 var mainState = {
     preload: function() {
         game.load.image('hero', 'assets/icarus-full.png');
@@ -36,9 +39,12 @@ var mainState = {
         //
         // this.gestures.onTap.add(this.jump, this);
 
-        var spaceKey = game.input.keyboard.addKey(
+        spaceKey = game.input.keyboard.addKey(
             Phaser.Keyboard.SPACEBAR
         );
+
+        tap = game.input.onDown.add(this.jump, this);
+
         spaceKey.onDown.add(this.jump, this);
 
         this.columns = game.add.group();
@@ -84,11 +90,11 @@ var mainState = {
           this.hero.angle += 1;
         }
 
-        if (this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50){
+        if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50){
           this.score += 1;
           this.labelScore.text = this.score;
           this.pointSound.play();
-        } else if (this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
+        } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99) {
           this.score += 1;
           this.labelScore.text = this.score;
           this.pointSound.play();
@@ -214,12 +220,19 @@ var mainState = {
       this.columnsBrokenUp.forEach(function(col){
         col.body.velocity.x = 0;
       }, this);
+
+      spaceKey = game.input.keyboard.removeKey(
+          Phaser.Keyboard.SPACEBAR
+      );
+
+      tap = game.input.onDown.remove(this.jump, this);
+
     },
 
 
 };
 
-var game = new Phaser.Game(800, 600);
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
 game.state.add('main', mainState);
 
