@@ -10,7 +10,13 @@
     <script type="text/javascript" src="phaser.min.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <style media="screen">
-      @media (max-width: 800px), handheld and (orientation: landscape) {
+    @media (max-width: 800px) and (orientation: portrait) {
+      canvas {
+        height: inherit;
+        width: inherit;
+      }
+    }
+      @media (max-width: 800px) and (orientation: landscape) {
         canvas {
           height: 100vh !important;
           width: 100vw !important;
