@@ -33,7 +33,7 @@ var mainMenu = {
         var instructions = this.game.add.text(150,300, 'Tap SPACEBAR or TAP to JUMP. \n\nTo start the game, use the same function.', {font: "14px Press Start 2P", align:"center",fill: "#000000"});
         instructions.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
 
-        var hs = this.game.add.text(600, 20, "Highscore: "+ highscore, {
+        var hs = this.game.add.text(600, 20, "High Score: "+ highscore, {
             font: "14px Press Start 2P",
             fill: "#000"
         });
