@@ -1,3 +1,60 @@
+var title;
+var instructions;
+var highscore = 0;
+
+WebFont.load({
+  google: {
+    families: ['Press Start 2P']
+  }
+});
+
+var mainMenu = {
+
+    preload: function() {
+      game.load.image('background', 'assets/cloud_final_noclouds.png');
+      game.load.image('clouds', 'assets/clouds-alone.gif');
+      game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+    },
+    create: function() {
+        game.add.image(0, 0, 'background');
+
+        this.clouds = this.game.add.tileSprite(0,
+          this.game.height - 550,
+          this.game.width,
+          this.game.cache.getImage('clouds').height,
+          'clouds'
+        );
+
+        var title = this.game.add.text(350,50, 'ICARU', {font: "32px Press Start 2P", fill: "#000000"});
+        title.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
+
+        console.log(title);
+
+        var instructions = this.game.add.text(150,300, 'Tap SPACEBAR or TAP to JUMP. \n\nTo start the game, use the same function.', {font: "14px Press Start 2P", align:"center",fill: "#000000"});
+        instructions.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
+
+        var hs = this.game.add.text(600, 20, "Highscore: "+ highscore, {
+            font: "14px Press Start 2P",
+            fill: "#000"
+        });
+
+        spaceKey = game.input.keyboard.addKey(
+            Phaser.Keyboard.SPACEBAR
+        );
+
+    },
+
+    update: function() {
+    this.clouds.tilePosition.x -= 0.50;
+
+    if(this.game.input.activePointer.justPressed() || spaceKey.isDown === true){
+      this.game.state.start('main');
+    }
+  }
+
+};
+
+
 var spaceKey;
 var tap;
 
@@ -13,11 +70,10 @@ var mainState = {
         game.load.audio('jump', 'assets/jump.wav');
         game.load.audio('point', 'assets/point.wav');
         game.load.audio('gameover', 'assets/gameover.wav');
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
 
     create: function() {
-        // game.stage.image(800, 600, 'clouds');
-
         game.add.image(0, 0, 'background');
 
         this.clouds = this.game.add.tileSprite(0,
@@ -34,10 +90,6 @@ var mainState = {
         game.physics.arcade.enable(this.hero);
 
         this.hero.body.gravity.y = 1000;
-
-        // this.gestures = new Gesture(this.game);
-        //
-        // this.gestures.onTap.add(this.jump, this);
 
         spaceKey = game.input.keyboard.addKey(
             Phaser.Keyboard.SPACEBAR
@@ -62,7 +114,7 @@ var mainState = {
         this.score = 0;
 
         this.labelScore = game.add.text(20, 20, "0", {
-            font: "30px Arial",
+            font: "30px Press Start 2P",
             fill: "#000"
         });
 
@@ -80,7 +132,6 @@ var mainState = {
 
         if (this.hero.y < 0 || this.hero.y > 600) {
             this.restartGame();
-            // this.gameoverSound.play();
         }
         game.physics.arcade.overlap(
             this.hero, this.allColumns, this.hitCol, null, this
@@ -93,10 +144,16 @@ var mainState = {
         if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50 || this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50){
           this.score += 1;
           this.labelScore.text = this.score;
+          if (this.score > highscore){
+            highscore = this.score;
+          }
           this.pointSound.play();
         } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99 || this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
           this.score += 1;
           this.labelScore.text = this.score;
+          if (this.score > highscore){
+            highscore = this.score;
+          }
           this.pointSound.play();
         }
     },
@@ -112,7 +169,7 @@ var mainState = {
     },
 
     restartGame: function() {
-        game.state.start('main');
+        game.state.start('menu');
     },
 
     addOneCol: function(x, y) {
@@ -154,9 +211,6 @@ var mainState = {
 
         columnBroken.checkWorldBounds = true;
         columnBroken.outOfBoundsKill = true;
-        //
-        // this.score += 1;
-        // this.labelScore.text = this.score;
     },
 
     addOneColBrokenUpside: function(x, y) {
@@ -172,11 +226,9 @@ var mainState = {
         columnBrokenUp.outOfBoundsKill = true;
     },
 
-    //need to check this block
     addRowOfCol: function() {
         var hole = Math.floor(Math.random() * 300) + 1;
         var realHole = Math.random();
-        // addOneCol.body.y = hole * 50;
 
         // Rightside up columns
         for (var i = 1; i < 2; i++) {
@@ -236,20 +288,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
 game.state.add('main', mainState);
 
-// game.state.add('menu', Menu);
-//
-game.state.start('main');
-//
-// var Menu = {
-//   preload: function() {
-//
-//   },
-//
-//   create: function() {
-//
-//   },
-//
-//   update: function() {
-//
-//   }
-// };
+game.state.add('menu', mainMenu);
+
+game.state.start('menu');
