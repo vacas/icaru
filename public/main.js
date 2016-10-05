@@ -71,14 +71,19 @@ var mainMenu = {
         });
         title.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
 
-        console.log(title);
-
         var instructions = this.game.add.text(150, 300, 'Tap SPACEBAR or TAP to JUMP. \n\nTo start the game, use the same function.', {
             font: "14px Press Start 2P",
             align: "center",
             fill: "#000000"
         });
         instructions.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
+
+        var credits = this.game.add.text(30, 500, "Credits:\nDesigns: José Daniel 'Mansuper' Vélez\nProgramming: Miguel Vacas", {
+            font: "10px Press Start 2P",
+            align: "left",
+            fill: "#000000"
+        });
+        credits.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
 
         var hs = this.game.add.text(600, 20, "High Score: " + highscore, {
             font: "14px Press Start 2P",
@@ -93,11 +98,10 @@ var mainMenu = {
             Phaser.Keyboard.TAB
         );
 
-        jinete = game.add.audio('jinete');
-
-        if (jinete.isPlaying === true) {
-          jinete.pause();
+        if (!jinete) {
+          jinete = game.add.audio('jinete');
         }
+        jinete.stop();
 
     },
 
@@ -110,7 +114,7 @@ var mainMenu = {
         if (tabButton.isDown === true) {
             this.game.state.start('menu_b');
         }
-    }
+    },
 
 };
 
@@ -424,6 +428,13 @@ var mainMenu_b = {
         });
         instructions.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
 
+        var credits = this.game.add.text(30, 500, "Credits:\nDesigns: José Daniel 'Mansuper' Vélez\nProgramming: Miguel Vacas\nMusic: 'El Jinete' by Jose Alfredo Jimenez", {
+            font: "10px Press Start 2P",
+            align: "left",
+            fill: "#000000"
+        });
+        credits.setShadow(-3, 3, 'rgba(0,0,0,0.2)', 0);
+
         var hs = this.game.add.text(600, 20, "High Score: " + highscore, {
             font: "14px Press Start 2P",
             fill: "#000"
@@ -437,13 +448,10 @@ var mainMenu_b = {
             Phaser.Keyboard.TAB
         );
 
-        jinete = game.add.audio('jinete');
-
-        if (jinete.isPlaying === false && jinete.usingWebAudio) {
+        if (!jinete.isPlaying || !jinete) {
+          jinete = game.add.audio('jinete', 1, true);
           jinete.play();
         }
-
-        console.log(jinete);
 
     },
 
@@ -539,6 +547,8 @@ var mainState_b = {
 
         this.gameoverSound = game.add.audio('gameover');
 
+        this.gameoverSound.volume = 0.1;
+
         // console.log(this.thunder_strike);
     },
 
@@ -615,7 +625,7 @@ var mainState_b = {
         if (this.hero.alive === false) {
             return;
         }
-        this.jumpSound.volume = 0.2;
+        this.jumpSound.volume = 0.1;
         this.jumpSound.play();
     },
 
