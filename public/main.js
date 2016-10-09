@@ -52,9 +52,9 @@ var mainMenu = {
 
     preload: function() {
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
+        game.load.image('clouds', 'assets/clouds-alone.png');
         game.load.audio('jinete', 'assets/eljinete2.mp3');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
     create: function() {
         game.add.image(0, 0, 'background');
@@ -134,12 +134,12 @@ var mainState = {
         game.load.image('columnUp', 'assets/col-full-upside.png');
         game.load.image('columnBrokenUp', 'assets/col-broken-upside.png');
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
+        game.load.image('clouds', 'assets/clouds-alone.png');
         game.load.image('thunder_bg', 'assets/thunder-bg.png');
         game.load.audio('jump', 'assets/jump.wav');
         game.load.audio('point', 'assets/point.wav');
         game.load.audio('gameover', 'assets/gameover.wav');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
 
     create: function() {
@@ -409,9 +409,9 @@ var mainMenu_b = {
 
     preload: function() {
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
+        game.load.image('clouds', 'assets/clouds-alone.png');
         game.load.audio('jinete', 'assets/eljinete2.mp3');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
     create: function() {
         game.add.image(0, 0, 'background');
@@ -486,12 +486,12 @@ var mainState_b = {
         game.load.image('columnUp', 'assets/col-full-upside.png');
         game.load.image('columnBrokenUp', 'assets/col-broken-upside.png');
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
+        game.load.image('clouds', 'assets/clouds-alone.png');
         game.load.image('thunder_bg', 'assets/thunder-bg.png');
         game.load.audio('jump', 'assets/jump.wav');
         game.load.audio('point', 'assets/point.wav');
         game.load.audio('gameover', 'assets/gameover.wav');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
 
     create: function() {
@@ -754,8 +754,8 @@ var mainMenu_chat = {
 
     preload: function() {
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        game.load.image('clouds', 'assets/clouds-alone.png');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
     create: function() {
         game.add.image(0, 0, 'background');
@@ -824,6 +824,8 @@ var mainMenu_chat = {
 
 };
 
+var wine;
+
 var mainState_chat = {
     preload: function() {
         game.load.image('hero', 'assets/vicarus.png');
@@ -832,13 +834,13 @@ var mainState_chat = {
         game.load.image('columnUp', 'assets/col-full-upside.png');
         game.load.image('columnBrokenUp', 'assets/col-broken-upside.png');
         game.load.image('background', 'assets/cloud_final_noclouds.png');
-        game.load.image('clouds', 'assets/clouds-alone.gif');
+        game.load.image('clouds', 'assets/clouds-alone.png');
         game.load.image('thunder_bg', 'assets/thunder-bg.png');
         game.load.image('wine-b', 'assets/8-bit-wine.png');
         game.load.audio('jump', 'assets/jump.wav');
         game.load.audio('point', 'assets/point.wav');
         game.load.audio('gameover', 'assets/gameover.wav');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
     },
 
     create: function() {
@@ -879,7 +881,9 @@ var mainState_chat = {
 
         this.columnsBrokenUp = game.add.group();
 
-        this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
+        this.wine = game.add.group();
+
+        this.allItems = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp, this.wine];
 
         this.column_timer = game.time.events.loop(2250, this.addRowOfCol, this);
 
@@ -914,7 +918,7 @@ var mainState_chat = {
             this.restartGame();
         }
         game.physics.arcade.overlap(
-            this.hero, [this.allColumns, this.wine], this.hitCol, null, this
+            this.hero, this.allItems, this.hitCol, null, this
         );
 
         if (this.hero.angle < 20) {
@@ -937,6 +941,10 @@ var mainState_chat = {
             this.pointSound.play();
         }
 
+        // this.wine.angle++;
+
+        console.log(this.wine.angle);
+
     },
 
     jump: function() {
@@ -957,25 +965,31 @@ var mainState_chat = {
 
     addWine: function() {
         var y = Math.floor(Math.random() * 600);
-        this.wine = game.add.sprite(800, y, 'wine-b');
+        var wine = game.add.sprite(800, y, 'wine-b');
 
-        this.wine.anchor.setTo(0.5, 0.5);
+        // wine.anchor.setTo(0.5, 0.5);
 
-        console.log(this.wine.angle);
+        this.wine.add(wine);
+
+        // game.add.tween(wine).to({
+        //   anchor: 0.5,0.5
+        // }, 10).start();
+
+        // console.log(this.wine.angle);
 
         game.physics.arcade.enable(this.wine);
 
-        this.wine.body.velocity.x = -300;
+        wine.body.velocity.x = -300;
 
-        this.wine.checkWorldBounds = true;
-        this.wine.outOfBoundsKill = true;
-        this.wineRotate(this.wine);
+        wine.checkWorldBounds = true;
+        wine.outOfBoundsKill = true;
+        // wineRotate(this.wine);
 
     },
 
-    wineRotate: function(sprite){
-      sprite.angle++;
-    },
+    // wineRotate: function(sprite){
+    //   sprite.angle++;
+    // },
 
     addOneCol: function(x, y) {
         var column = game.add.sprite(x, y, 'column');
