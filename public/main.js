@@ -104,7 +104,7 @@ var mainMenu = {
         );
 
         if (!jinete) {
-          jinete = game.add.audio('jinete');
+            jinete = game.add.audio('jinete');
         }
         jinete.stop();
 
@@ -457,8 +457,8 @@ var mainMenu_b = {
         );
 
         if (!jinete.isPlaying || !jinete) {
-          jinete = game.add.audio('jinete', 1, true);
-          jinete.play();
+            jinete = game.add.audio('jinete', 1, true);
+            jinete.play();
         }
 
     },
@@ -498,6 +498,8 @@ var mainState_b = {
         game.add.image(0, 0, 'background');
 
         thunder = game.add.image(0, 0, 'thunder_bg');
+
+        thunder.alpha = 0;
 
         this.clouds = this.game.add.tileSprite(0,
             this.game.height - 550,
@@ -557,8 +559,7 @@ var mainState_b = {
 
         thunder.visible = true;
 
-        console.log(thunder);
-
+        // console.log(thunder);
 
     },
 
@@ -594,6 +595,13 @@ var mainState_b = {
             }
             this.pointSound.play();
         }
+
+        if(this.score >= 5){
+          game.add.tween(thunder).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true);
+          this.labelScore.fill = "#ffffff";
+        }
+
+
     },
 
     jump: function() {
@@ -606,6 +614,10 @@ var mainState_b = {
         }
         this.jumpSound.volume = 0.1;
         this.jumpSound.play();
+    },
+
+    twilight: function(){
+      thunder.alpha += 0.1;
     },
 
     restartGame: function() {
@@ -822,6 +834,7 @@ var mainState_chat = {
         game.load.image('background', 'assets/cloud_final_noclouds.png');
         game.load.image('clouds', 'assets/clouds-alone.gif');
         game.load.image('thunder_bg', 'assets/thunder-bg.png');
+        game.load.image('wine-b', 'assets/8-bit-wine.png');
         game.load.audio('jump', 'assets/jump.wav');
         game.load.audio('point', 'assets/point.wav');
         game.load.audio('gameover', 'assets/gameover.wav');
@@ -870,6 +883,8 @@ var mainState_chat = {
 
         this.column_timer = game.time.events.loop(2250, this.addRowOfCol, this);
 
+        this.wine_timer = game.time.events.loop(3050, this.addWine, this);
+
         // this.thunder_timer = game.time.events.loop(1000, this.thunder_strike, this);
 
         this.score = 0;
@@ -899,7 +914,7 @@ var mainState_chat = {
             this.restartGame();
         }
         game.physics.arcade.overlap(
-            this.hero, this.allColumns, this.hitCol, null, this
+            this.hero, [this.allColumns, this.wine], this.hitCol, null, this
         );
 
         if (this.hero.angle < 20) {
@@ -921,6 +936,7 @@ var mainState_chat = {
             }
             this.pointSound.play();
         }
+
     },
 
     jump: function() {
@@ -937,6 +953,28 @@ var mainState_chat = {
 
     restartGame: function() {
         game.state.start('menu_chat');
+    },
+
+    addWine: function() {
+        var y = Math.floor(Math.random() * 600);
+        this.wine = game.add.sprite(800, y, 'wine-b');
+
+        this.wine.anchor.setTo(0.5, 0.5);
+
+        console.log(this.wine.angle);
+
+        game.physics.arcade.enable(this.wine);
+
+        this.wine.body.velocity.x = -300;
+
+        this.wine.checkWorldBounds = true;
+        this.wine.outOfBoundsKill = true;
+        this.wineRotate(this.wine);
+
+    },
+
+    wineRotate: function(sprite){
+      sprite.angle++;
     },
 
     addOneCol: function(x, y) {
