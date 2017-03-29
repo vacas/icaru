@@ -1,6 +1,6 @@
-node_modules
-hellophaser
-images
-app
+./node_modules
+./hellophaser
+./Icaru-darwin-x64
+
 
 .DS_Store
