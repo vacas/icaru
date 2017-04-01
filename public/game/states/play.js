@@ -1,246 +1,271 @@
 'use strict';
-// function Play() {}
-// Play.prototype = {
-//   create: function() {
-//     this.game.physics.startSystem(Phaser.Physics.ARCADE);
-//     this.sprite = this.game.add.sprite(this.game.width/2, this.game.height/2, 'yeoman');
-//     this.sprite.inputEnabled = true;
-//
-//     this.game.physics.arcade.enable(this.sprite);
-//     this.sprite.body.collideWorldBounds = true;
-//     this.sprite.body.bounce.setTo(1,1);
-//     this.sprite.body.velocity.x = this.game.rnd.integerInRange(-500,500);
-//     this.sprite.body.velocity.y = this.game.rnd.integerInRange(-500,500);
-//
-//     this.sprite.events.onInputDown.add(this.clickListener, this);
-//   },
-//   update: function() {
-//
-//   },
-//   clickListener: function() {
-//     this.game.state.start('gameover');
-//   }
-// };
-//
-// module.exports = Play;
-
-// function mainState() {}
-var mainState = {
-    create: function() {
-        this.add.image(0, 0, 'background');
-
-        this.clouds = this.game.add.tileSprite(0,
-            this.game.height - 550,
-            this.game.width,
-            this.game.cache.getImage('clouds').height,
-            'clouds'
-        );
-
-        this.physics.startSystem(Phaser.Physics.ARCADE);
-
-        this.hero = this.add.sprite(100, 245, 'hero');
 
-        this.physics.arcade.enable(this.hero);
+function creatingPlay(menu, version) {
+  var mainState = {
+      create: function() {
+        //ADDING
+          this.add.image(0, 0, 'background');
+          this.jumpSound = this.add.audio('jump');
+          this.pointSound = this.add.audio('point');
+          this.gameoverSound = this.add.audio('gameover');
+          this.clouds = this.game.add.tileSprite(0,
+              this.game.height - 550,
+              this.game.width,
+              this.game.cache.getImage('clouds').height,
+              'clouds'
+          );
+
+          // GROUPS
+          this.columns = this.add.group();
+          this.columnsUp = this.add.group();
+          this.columnsBroken = this.add.group();
+          this.columnsBrokenUp = this.add.group();
+
+          if(version == 'vicarus') {
+            this.hero = this.add.sprite(100, 245, 'vicarus');
+            this.wine = game.add.group();
+            this.wine_timer = game.time.events.loop(3050, this.addWine, this);
+            this.allItems = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp, this.wine];
+          } else if (version == 'jinete') {
+            this.hero = this.add.sprite(100, 245, 'hero');
+            this.gameoverSound.volume = 0.1;
+            this.pointSound.volume = 0.1;
+            this.jumpSound.volume = 0.1;
+            thunder = game.add.image(0, 0, 'thunder_bg');
+            thunder.alpha = 0;
+            thunder.visible = true;
+            this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
+          } else {
+            this.hero = this.add.sprite(100, 245, 'hero');
+            this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
+          }
+
+          this.physics.startSystem(Phaser.Physics.ARCADE);
+
+          this.physics.arcade.enable(this.hero);
+
+          this.hero.body.gravity.y = 1000;
+
+          spaceKey = this.input.keyboard.addKey(
+              Phaser.Keyboard.SPACEBAR
+          );
+
+          tap = this.input.onDown.add(this.jump, this);
+
+          spaceKey.onDown.add(this.jump, this);
+
+          this.column_timer = this.time.events.loop(2250, this.addRowOfCol, this);
+
+          this.score = 0;
+
+          this.labelScore = this.add.text(20, 20, "0", {
+              font: "30px Press Start 2P",
+              fill: "#000"
+          });
+
+          this.hero.anchor.setTo(-0.2, 0.5);
+
+          // this.thunder_timer = this.time.events.loop(1000, this.thunder_strike, this);
+      },
+
+      update: function() {
+          this.clouds.tilePosition.x -= 0.50;
+
+          if (this.hero.y < 0 || this.hero.y > 600) {
+              this.restartGame();
+          }
+
+          if(version == 'vicarus'){
+            this.physics.arcade.overlap(
+                this.hero, this.allItems, this.hitCol, null, this
+            );
+          } else {
+            this.physics.arcade.overlap(
+                this.hero, this.allColumns, this.hitCol, null, this
+            );
+          }
 
-        this.hero.body.gravity.y = 1000;
+          if (this.hero.angle < 20) {
+              this.hero.angle += 1;
+          }
 
-        spaceKey = this.input.keyboard.addKey(
-            Phaser.Keyboard.SPACEBAR
-        );
+          if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50 || this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50) {
+              this.score += 1;
+              this.labelScore.text = this.score;
+              if (this.score > highscore) {
+                  highscore = this.score;
+              }
+              this.pointSound.play();
+          } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99 || this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
+              this.score += 1;
+              this.labelScore.text = this.score;
+              if (this.score > highscore) {
+                  highscore = this.score;
+              }
+              this.pointSound.play();
+          }
 
-        tap = this.input.onDown.add(this.jump, this);
+          if(version == 'jinete' && this.score >= 5){
+            game.add.tween(thunder).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true);
+            this.labelScore.fill = "#ffffff";
+          }
 
-        spaceKey.onDown.add(this.jump, this);
+          // game.time.events.add(this.thunder_timer);
+      },
 
-        this.columns = this.add.group();
+      jump: function() {
+          this.hero.body.velocity.y = -350;
+          this.add.tween(this.hero).to({
+              angle: -20
+          }, 100).start();
+          if (this.hero.alive === false) {
+              return;
+          }
 
-        this.columnsUp = this.add.group();
+          this.jumpSound.play();
+      },
 
-        this.columnsBroken = this.add.group();
+      restartGame: function() {
+          this.state.start(menu);
+      },
 
-        this.columnsBrokenUp = this.add.group();
+      twilight: function(){
+        thunder.alpha += 0.1;
+      },
 
-        this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
+      addOneCol: function(x, y) {
+          var column = this.add.sprite(x, y, 'column');
 
-        this.column_timer = this.time.events.loop(2250, this.addRowOfCol, this);
+          this.columns.add(column);
 
-        // this.thunder_timer = this.time.events.loop(1000, this.thunder_strike, this);
+          this.physics.arcade.enable(column);
 
-        this.score = 0;
+          column.body.velocity.x = -200;
 
-        this.labelScore = this.add.text(20, 20, "0", {
-            font: "30px Press Start 2P",
-            fill: "#000"
-        });
+          column.checkWorldBounds = true;
+          column.outOfBoundsKill = true;
+      },
 
-        this.hero.anchor.setTo(-0.2, 0.5);
+      addOneColUpside: function(x, y) {
+          var columnUp = this.add.sprite(x, y, 'columnUp');
 
-        this.jumpSound = this.add.audio('jump');
+          this.columnsUp.add(columnUp);
 
-        this.pointSound = this.add.audio('point');
+          this.physics.arcade.enable(columnUp);
 
-        this.gameoverSound = this.add.audio('gameover');
+          columnUp.body.velocity.x = -200;
 
-    },
+          columnUp.checkWorldBounds = true;
+          columnUp.outOfBoundsKill = true;
 
-    update: function() {
-        // game.time.events.add(this.thunder_timer);
 
-        this.clouds.tilePosition.x -= 0.50;
+      },
 
-        if (this.hero.y < 0 || this.hero.y > 600) {
-            this.restartGame();
-        }
-        this.physics.arcade.overlap(
-            this.hero, this.allColumns, this.hitCol, null, this
-        );
+      addOneColBroken: function(x, y) {
+          var columnBroken = this.add.sprite(x, y, 'columnBroken');
 
-        if (this.hero.angle < 20) {
-            this.hero.angle += 1;
-        }
+          this.columnsBroken.add(columnBroken);
 
-        if (this.columnsUp.getBounds().x <= -49 && this.columnsUp.getBounds().x >= -50 || this.columns.getBounds().x <= -49 && this.columns.getBounds().x >= -50) {
-            this.score += 1;
-            this.labelScore.text = this.score;
-            if (this.score > highscore) {
-                highscore = this.score;
-            }
-            this.pointSound.play();
-        } else if (this.columnsBrokenUp.getBounds().x >= -100 && this.columnsBrokenUp.getBounds().x <= -99 || this.columnsBroken.getBounds().x >= -100 && this.columnsBroken.getBounds().x <= -99) {
-            this.score += 1;
-            this.labelScore.text = this.score;
-            if (this.score > highscore) {
-                highscore = this.score;
-            }
-            this.pointSound.play();
-        }
-    },
+          this.physics.arcade.enable(columnBroken);
 
-    jump: function() {
-        this.hero.body.velocity.y = -350;
-        this.add.tween(this.hero).to({
-            angle: -20
-        }, 100).start();
-        if (this.hero.alive === false) {
-            return;
-        }
+          columnBroken.body.velocity.x = -400;
 
-        this.jumpSound.play();
-    },
+          columnBroken.checkWorldBounds = true;
+          columnBroken.outOfBoundsKill = true;
+      },
 
-    restartGame: function() {
-        this.state.start('menu');
-    },
+      addOneColBrokenUpside: function(x, y) {
+          var columnBrokenUp = this.add.sprite(x, y, 'columnBrokenUp');
 
-    addOneCol: function(x, y) {
-        var column = this.add.sprite(x, y, 'column');
+          this.columnsBrokenUp.add(columnBrokenUp);
 
-        this.columns.add(column);
+          this.physics.arcade.enable(columnBrokenUp);
 
-        this.physics.arcade.enable(column);
+          columnBrokenUp.body.velocity.x = -400;
 
-        column.body.velocity.x = -200;
+          columnBrokenUp.checkWorldBounds = true;
+          columnBrokenUp.outOfBoundsKill = true;
+      },
 
-        column.checkWorldBounds = true;
-        column.outOfBoundsKill = true;
-    },
+      addRowOfCol: function() {
+          var hole = Math.floor(Math.random() * 300) + 1;
+          var realHole = Math.random();
 
-    addOneColUpside: function(x, y) {
-        var columnUp = this.add.sprite(x, y, 'columnUp');
+          // Rightside up columns
+          for (var i = 1; i < 2; i++) {
+              if (i != hole && i != hole + 300) {
+                  var otherside = realHole * -350;
+                  var othersideBroken = realHole * -500;
+                  if (Math.ceil(Math.random() * 3) == 3) {
+                      this.addOneColBroken(800, i * (othersideBroken + 650));
+                      this.addOneColBrokenUpside(800, i * (othersideBroken));
+                  } else {
+                      this.addOneCol(600, i * (otherside + 650));
+                      this.addOneColUpside(600, i * (otherside));
+                  }
+              }
+          }
+      },
 
-        this.columnsUp.add(columnUp);
+      hitCol: function() {
+          if (this.hero.alive === false) {
+              return;
+          }
 
-        this.physics.arcade.enable(columnUp);
+          this.hero.alive = false;
 
-        columnUp.body.velocity.x = -200;
+          this.gameoverSound.play();
 
-        columnUp.checkWorldBounds = true;
-        columnUp.outOfBoundsKill = true;
+          this.time.events.remove(this.column_timer);
 
+          this.columns.forEach(function(col) {
+              col.body.velocity.x = 0;
+          }, this);
 
-    },
+          this.columnsUp.forEach(function(col) {
+              col.body.velocity.x = 0;
+          }, this);
 
-    addOneColBroken: function(x, y) {
-        var columnBroken = this.add.sprite(x, y, 'columnBroken');
+          this.columnsBroken.forEach(function(col) {
+              col.body.velocity.x = 0;
+          }, this);
 
-        this.columnsBroken.add(columnBroken);
+          this.columnsBrokenUp.forEach(function(col) {
+              col.body.velocity.x = 0;
+          }, this);
 
-        this.physics.arcade.enable(columnBroken);
+          spaceKey = this.input.keyboard.removeKey(
+              Phaser.Keyboard.SPACEBAR
+          );
 
-        columnBroken.body.velocity.x = -400;
+          tap = this.input.onDown.remove(this.jump, this);
 
-        columnBroken.checkWorldBounds = true;
-        columnBroken.outOfBoundsKill = true;
-    },
+      },
 
-    addOneColBrokenUpside: function(x, y) {
-        var columnBrokenUp = this.add.sprite(x, y, 'columnBrokenUp');
+      addWine: function() {
+          var y = Math.floor(Math.random() * 600);
+          var wine = game.add.sprite(800, y, 'wine-b');
 
-        this.columnsBrokenUp.add(columnBrokenUp);
+          this.wine.add(wine);
 
-        this.physics.arcade.enable(columnBrokenUp);
+          game.physics.arcade.enable(this.wine);
 
-        columnBrokenUp.body.velocity.x = -400;
+          wine.body.velocity.x = -300;
 
-        columnBrokenUp.checkWorldBounds = true;
-        columnBrokenUp.outOfBoundsKill = true;
-    },
+          wine.checkWorldBounds = true;
+          wine.outOfBoundsKill = true;
 
-    addRowOfCol: function() {
-        var hole = Math.floor(Math.random() * 300) + 1;
-        var realHole = Math.random();
+          // wine.anchor.setTo(0.5, 0.5);
 
-        // Rightside up columns
-        for (var i = 1; i < 2; i++) {
-            if (i != hole && i != hole + 300) {
-                var otherside = realHole * -350;
-                var othersideBroken = realHole * -500;
-                if (Math.ceil(Math.random() * 3) == 3) {
-                    this.addOneColBroken(800, i * (othersideBroken + 650));
-                    this.addOneColBrokenUpside(800, i * (othersideBroken));
-                } else {
-                    this.addOneCol(600, i * (otherside + 650));
-                    this.addOneColUpside(600, i * (otherside));
-                }
-            }
-        }
-    },
+          // game.add.tween(wine).to({
+          //   anchor: 0.5,0.5
+          // }, 10).start();
 
-    hitCol: function() {
-        if (this.hero.alive === false) {
-            return;
-        }
+          // wineRotate(this.wine);
 
-        this.hero.alive = false;
+      },
 
-        this.gameoverSound.play();
+  };
 
-        this.time.events.remove(this.column_timer);
-
-        this.columns.forEach(function(col) {
-            col.body.velocity.x = 0;
-        }, this);
-
-        this.columnsUp.forEach(function(col) {
-            col.body.velocity.x = 0;
-        }, this);
-
-        this.columnsBroken.forEach(function(col) {
-            col.body.velocity.x = 0;
-        }, this);
-
-        this.columnsBrokenUp.forEach(function(col) {
-            col.body.velocity.x = 0;
-        }, this);
-
-        spaceKey = this.input.keyboard.removeKey(
-            Phaser.Keyboard.SPACEBAR
-        );
-
-        tap = this.input.onDown.remove(this.jump, this);
-
-    },
-
-};
-console.log('play');
-// module.exports = mainState;
+  return mainState;
+}

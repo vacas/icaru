@@ -2,5 +2,6 @@
 ./hellophaser
 ./Icaru-darwin-x64
 ./test
+./images
 
 .DS_Store
