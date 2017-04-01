@@ -2,8 +2,6 @@
 
 //global variables
 var game, spaceKey, tap, highscore, column_timer, thunder_timer, thunder, tabButton, jinete, chatButton, title, instructions, highscore = 0, playing;
-// Boot, mainMenu, mainState, Preload,,
-
 
 WebFont.load({
     google: {

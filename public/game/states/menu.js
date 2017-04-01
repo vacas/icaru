@@ -6,7 +6,6 @@ function creatingMenu(text, credit, play, tab, chat){
       preload: function() {
           game.load.image('background', '../../assets/cloud_final_noclouds.png');
           game.load.image('clouds', '../../assets/clouds-alone.png');
-          game.load.audio('jinete', '../../assets/eljinete2.mp3');
       },
       create: function() {
           game.add.image(0, 0, 'background');
