@@ -13,9 +13,9 @@ window.onload = function () {
   game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-window');
 
   // GAME MENUS
-  var mainMenu = creatingMenu('ICARU', '', 'play', 'menu_jinete', 'menu_chat');
-  var jineteMenu = creatingMenu('EL JINETE', "Music: 'El Jinete' by Jose Alfredo Jimenez", 'play_jinete', 'menu', 'menu_chat');
-  var vicarusMenu = creatingMenu('VICARUS', '', 'play_chat', 'menu_jinete', 'menu');
+  var mainMenu = creatingMenu(350, 50, 'ICARU', '', 'play', 'menu_jinete', 'menu_chat');
+  var jineteMenu = creatingMenu(300, 50, 'EL JINETE', "Music: 'El Jinete' by Jose Alfredo Jimenez", 'play_jinete', 'menu', 'menu_chat');
+  var vicarusMenu = creatingMenu(350, 50, 'VICARUS', '', 'play_chat', 'menu_jinete', 'menu');
 
   // GAME STATES
   var mainState = creatingPlay('menu', '');

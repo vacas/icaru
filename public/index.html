@@ -9,15 +9,21 @@
     <meta property="og:url" content="http://www.icaru.co"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <title> Icaru </title>
-    <!-- <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Press+Start+2P"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/samrayner/bootstrap-side-navbar/gh-pages/assets/stylesheets/navbar-fixed-side.css">
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-    <!-- <script type="text/javascript" src="https://icaru.herokuapp.com/phaser.min.js"></script> -->
-    <!-- <script type="text/javascript" src="main.js"></script> -->
     <style media="screen">
+    body {
+      background-color: black;
+    }
     @media (max-width: 800px) and (orientation: portrait) {
       canvas {
         height: inherit;
         width: inherit;
+      }
+      li {
+          display: inline;
+          margin: 0 15px;
       }
     }
       @media (max-width: 800px) and (orientation: landscape) {
@@ -25,15 +31,60 @@
           height: 100vh !important;
           width: 100vw !important;
         }
+        li {
+            display: inline;
+            margin: 0 15px;
+        }
       }
-      #game-window {
+      #game-window > canvas {
         margin: auto;
+      }
+      ul {
+        list-style: none;
+        padding-left: 10px;
+      }
+
+      p {
+        padding: 10px 0;
+      }
+
+      .asideItems {
+        height: 40px;
+        margin-bottom: 15px;
+        border-radius: 40px;
+      }
+
+      .asideItems:hover {
+        opacity: 0.7;
       }
     </style>
   </head>
   <body>
-    <div id="game-window">
-
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-hidden col-sm-hidden col-md-1">
+          <nav class="navbar navbar-default navbar-fixed-side">
+            <ul>
+              <li>
+                <p>FOLLOW ME:</p>
+              </li>
+              <li>
+                <a href="http://www.miguelvacas.com"><img src="assets/mv-logo.png" class="asideItems" alt="Miguel Vacas Logo"></a>
+              </li>
+              <li>
+                <a href="http://twitter.com/mfjv88" target="_blank"><img src="assets/Twitterbird.png" class="asideItems" alt="twitter" /></a>
+              </li>
+              <li>
+                <a href="http://github.com/mfjv88" target="_blank"><img src="assets/github.png" class="asideItems" alt="github" /> </a>
+              </li>
+              <li>
+                <a href="http://linkedin.com/in/miguelvacas" target="_blank"><img src="assets/linkedin.png" class="asideItems" alt="linkedin" /> </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div id="game-window" class="col-xs-12 col-md-11"></div>
+      </div>
     </div>
     <script type="text/javascript" src="phaser.min.js"></script>
     <script type="text/javascript" src="game/states/boot.js"></script>

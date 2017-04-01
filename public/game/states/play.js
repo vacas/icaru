@@ -8,15 +8,15 @@ function creatingPlay(menu, version) {
           this.jumpSound = this.add.audio('jump');
           this.pointSound = this.add.audio('point');
           this.gameoverSound = this.add.audio('gameover');
+          thunder = game.add.image(0, 0, 'thunder_bg');
+          thunder.alpha = 0;
+          thunder.visible = true;
           this.clouds = this.game.add.tileSprite(0,
               this.game.height - 550,
               this.game.width,
               this.game.cache.getImage('clouds').height,
               'clouds'
           );
-          thunder = game.add.image(0, 0, 'thunder_bg');
-          thunder.alpha = 0;
-          thunder.visible = true;
 
           // GROUPS
           this.columns = this.add.group();

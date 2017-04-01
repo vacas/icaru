@@ -17,9 +17,8 @@ var Preload = {
     game.load.image('clouds', '../../assets/clouds-alone.png')
     game.load.audio('jump', '../../assets/jump.wav');
     game.load.audio('point', '../../assets/point.wav');
-    game.load.audio('gameover', '../../assets/gameover.wav');;
+    game.load.audio('gameover', '../../assets/gameover.wav');
     game.load.audio('jinete', '../../assets/eljinete2.mp3');
-
   },
   create: function() {
     jinete = game.add.audio('jinete');

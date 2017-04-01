@@ -1,13 +1,13 @@
 'use strict';
 
-function creatingMenu(text, credit, play, tab, chat){
+function creatingMenu(x, y, text, credit, play, tab, chat){
   var mainMenu = {
 
       preload: function() {
-          game.load.image('background', '../../assets/cloud_final_noclouds.png');
-          game.load.image('clouds', '../../assets/clouds-alone.png');
       },
       create: function() {
+          // jinete = game.add.audio('jinete');
+          // jinete.play();
           game.add.image(0, 0, 'background');
           this.clouds = this.game.add.tileSprite(0,
               this.game.height - 550,
@@ -16,7 +16,7 @@ function creatingMenu(text, credit, play, tab, chat){
               'clouds'
           );
 
-          var title = this.game.add.text(350, 50, text, {
+          var title = this.game.add.text(x, y, text, {
               font: "32px Press Start 2P",
               fill: "#000000"
           });
