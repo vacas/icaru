@@ -14,6 +14,9 @@ function creatingPlay(menu, version) {
               this.game.cache.getImage('clouds').height,
               'clouds'
           );
+          thunder = game.add.image(0, 0, 'thunder_bg');
+          thunder.alpha = 0;
+          thunder.visible = true;
 
           // GROUPS
           this.columns = this.add.group();
@@ -31,9 +34,6 @@ function creatingPlay(menu, version) {
             this.gameoverSound.volume = 0.1;
             this.pointSound.volume = 0.1;
             this.jumpSound.volume = 0.1;
-            thunder = game.add.image(0, 0, 'thunder_bg');
-            thunder.alpha = 0;
-            thunder.visible = true;
             this.allColumns = [this.columns, this.columnsUp, this.columnsBroken, this.columnsBrokenUp];
           } else {
             this.hero = this.add.sprite(100, 245, 'hero');
@@ -255,12 +255,12 @@ function creatingPlay(menu, version) {
           wine.checkWorldBounds = true;
           wine.outOfBoundsKill = true;
 
-          // wine.anchor.setTo(0.5, 0.5);
 
+          // ATTEMPT TO MAKE BOTTLES ROTATE
+          // wine.anchor.setTo(0.5, 0.5);
           // game.add.tween(wine).to({
           //   anchor: 0.5,0.5
           // }, 10).start();
-
           // wineRotate(this.wine);
 
       },

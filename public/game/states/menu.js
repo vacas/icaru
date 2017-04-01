@@ -10,10 +10,6 @@ function creatingMenu(text, credit, play, tab, chat){
       },
       create: function() {
           game.add.image(0, 0, 'background');
-          jinete = game.add.audio('jinete', 1, true);
-          // jinete = game.add.audio('jinete');
-          playing = [false, 1];
-
           this.clouds = this.game.add.tileSprite(0,
               this.game.height - 550,
               this.game.width,
@@ -58,21 +54,15 @@ function creatingMenu(text, credit, play, tab, chat){
               Phaser.Keyboard.C
           );
 
-
-          if ((jinete.usingWebAudio == false) && (play == 'play_jinete')) {
-              jinete.play();
-              // playing[0] = true;
+          if (play != 'play_jinete'){
+            jinete.stop();
+          } else {
+            if(jinete.isPlaying == false) {
+                jinete.play();
+            } else {
+              jinete.resume();
+            }
           }
-
-          // if(playing[1] > 1){
-          //   jinete = game.add.audio('jinete', 1, true);
-          //   jinete.stop();
-          // }
-
-
-
-          // console.log(playing, jinete.isPlaying == false, play == 'play_jinete');
-
       },
 
       update: function() {
@@ -94,13 +84,7 @@ function creatingMenu(text, credit, play, tab, chat){
               this.game.state.start(chat);
           }
       },
-
-      render: function() {
-        game.debug.soundInfo(jinete, 20, 32);
-      }
   };
 
   return mainMenu;
 }
-
-// module.exports = mainMenu;

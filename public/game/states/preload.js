@@ -3,11 +3,6 @@
 
 var Preload = {
   preload: function() {
-    // this.asset = this.add.sprite(this.width/2,this.height/2, 'preloader');
-    // this.asset.anchor.setTo(0.5, 0.5);
-    //
-    // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
-    // this.load.setPreloadSprite(this.asset);
     game.load.image('hero', '../../assets/icarus-full.png');
     game.load.image('vicarus', '../../assets/vicarus.png');
     game.load.image('column', '../../assets/col-full.png');
@@ -27,6 +22,8 @@ var Preload = {
 
   },
   create: function() {
+    jinete = game.add.audio('jinete');
+    jinete.play();
   },
   update: function() {
       game.state.start('menu');
