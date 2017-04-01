@@ -16,26 +16,6 @@
     body {
       background-color: black;
     }
-    @media (max-width: 800px) and (orientation: portrait) {
-      canvas {
-        height: inherit;
-        width: inherit;
-      }
-      li {
-          display: inline;
-          margin: 0 15px;
-      }
-    }
-      @media (max-width: 800px) and (orientation: landscape) {
-        canvas {
-          height: 100vh !important;
-          width: 100vw !important;
-        }
-        li {
-            display: inline;
-            margin: 0 15px;
-        }
-      }
       #game-window > canvas {
         margin: auto;
       }
@@ -58,6 +38,26 @@
       .asideItems:hover {
         opacity: 0.7;
       }
+      
+      @media (max-width: 800px) and (orientation: portrait) {
+        canvas {
+          height: inherit;
+          width: inherit;
+        }
+      }
+        @media (max-width: 800px) and (orientation: landscape) {
+          canvas {
+            height: 100vh !important;
+            width: 100vw !important;
+          }
+        }
+
+        @media (max-width: 991px) {
+          li {
+              display: inline;
+              margin: 0 15px;
+          }
+        }
     </style>
   </head>
   <body>
