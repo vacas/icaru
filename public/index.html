@@ -12,9 +12,13 @@
     <!-- <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Press+Start+2P"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <!-- <script type="text/javascript" src="https://icaru.herokuapp.com/phaser.min.js"></script> -->
-    <!-- <script type="text/javascript" src="https://icaru.herokuapp.com/main.js"></script> -->
     <script type="text/javascript" src="phaser.min.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="game/states/boot.js"></script>
+    <script type="text/javascript" src="game/states/preload.js"></script>
+    <script type="text/javascript" src="game/states/menu.js"></script>
+    <script type="text/javascript" src="game/states/play.js"></script>
+    <script type="text/javascript" src="game/main.js"></script>
+    <!-- <script type="text/javascript" src="main.js"></script> -->
     <style media="screen">
     @media (max-width: 800px) and (orientation: portrait) {
       canvas {
@@ -28,8 +32,14 @@
           width: 100vw !important;
         }
       }
+      #game-window {
+        margin: auto;
+      }
     </style>
   </head>
   <body>
+    <div id="game-window">
+
+    </div>
   </body>
 </html>
