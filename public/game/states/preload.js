@@ -25,7 +25,7 @@ var Preload = {
     jinete.play();
   },
   update: function() {
-      game.state.start('menu');
+    game.state.start('menu');
   },
   onLoadComplete: function() {
     game.ready = true;

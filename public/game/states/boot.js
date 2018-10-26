@@ -1,9 +1,7 @@
 'use strict';
 
 var Boot = {
-  preload: function() {
-    // this.load.image('preloader', 'assets/preloader.gif');
-  },
+  preload: function() {},
   create: function() {
     game.state.start('preload');
   }

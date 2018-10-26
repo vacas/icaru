@@ -64,8 +64,6 @@ function creatingPlay(menu, version) {
           });
 
           this.hero.anchor.setTo(-0.2, 0.5);
-
-          // this.thunder_timer = this.time.events.loop(1000, this.thunder_strike, this);
       },
 
       update: function() {
@@ -109,8 +107,6 @@ function creatingPlay(menu, version) {
             game.add.tween(thunder).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true);
             this.labelScore.fill = "#ffffff";
           }
-
-          // game.time.events.add(this.thunder_timer);
       },
 
       jump: function() {
@@ -254,15 +250,6 @@ function creatingPlay(menu, version) {
 
           wine.checkWorldBounds = true;
           wine.outOfBoundsKill = true;
-
-
-          // ATTEMPT TO MAKE BOTTLES ROTATE
-          // wine.anchor.setTo(0.5, 0.5);
-          // game.add.tween(wine).to({
-          //   anchor: 0.5,0.5
-          // }, 10).start();
-          // wineRotate(this.wine);
-
       },
 
   };

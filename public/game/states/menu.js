@@ -2,12 +2,7 @@
 
 function creatingMenu(x, y, text, credit, play, tab, chat){
   var mainMenu = {
-
-      preload: function() {
-      },
       create: function() {
-          // jinete = game.add.audio('jinete');
-          // jinete.play();
           game.add.image(0, 0, 'background');
           this.clouds = this.game.add.tileSprite(0,
               this.game.height - 550,
