@@ -4,8 +4,7 @@
   "description": "A desktop app for side-scroller game",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha"
+    "start": "node server.js"
   },
   "github": "https://github.com/mfjv88/js-final-project",
   "keywords": [],
@@ -16,10 +15,6 @@
     "phaser": "^2.6.2"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-connect": "^1.0.2",
-    "mocha": "^3.0.2",
     "nodemon": "^1.10.2"
   }
 }
